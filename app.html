@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Openweathermap</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <h1>Openweathermap data</h1>
+    <h3>Click to view table</h3>
+    <div id="content">
+        <div class="textAlignCenter"></div>
+            <button id="submitButton">Get Weather</button>
+            <table id="newtable"></table>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#reset").click(function (e) {
+                location.reload();
+            });
+
+            $("#submitButton").click(function (e) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://api.openweathermap.org/data/2.5/group?id=2654675,2988507,2990969,2911298,2925535,2950159,3120501,3128760,5128581,4140963&appid=b6d35ce7bdceb8bb6796301855459adc&units=metric",
+                    dataType: "json",
+                    success: function (result, status, xhr) {
+                        res = CreateWeatherJson(result);
+                        
+                        $("#newtable").append("<thead><tr><th>City Id</th><th>City Name</th><th>Temperature</th><th>Min Temp</th><th>Max Temp</th><th>Humidity</th><th>Pressure</th></thead></table>");
+                        $('#newtable').DataTable({
+                            data: JSON.parse(res),
+                            columns: [
+                                { data: 'cityId' },
+                                { data: 'cityName' },
+                                { data: 'temp' },
+                                { data: 'tempMin' },
+                                { data: 'tempMax' },
+                                { data: 'pressure' },
+                                { data: 'humidity' }
+                            ],
+                            "pageLength": 3
+                        });
+                        
+                        /*
+                        var jsnstr = JSON.stringify(res);
+                        document.body.innerHTML = jsnstr;*/
+                                        
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                    }
+                });
+            });
+
+            function CreateWeatherJson(json) {
+                var newJson = "";
+                for (i = 0; i < json.list.length; i++) {
+                    cityId = json.list[i].id;
+                    cityName = json.list[i].name;
+                    temp = json.list[i].main.temp
+                    pressure = json.list[i].main.pressure
+                    humidity = json.list[i].main.humidity
+                    tempmin = json.list[i].main.temp_min
+                    tempmax = json.list[i].main.temp_max
+
+                    newJson = newJson + "{";
+                    newJson = newJson + "\"cityId\"" + ": " + cityId + ","
+                    newJson = newJson + "\"cityName\"" + ": " + "\"" + cityName + "\"" + ","
+                    newJson = newJson + "\"temp\"" + ": " + temp + ","
+                    newJson = newJson + "\"pressure\"" + ": " + pressure + ","
+                    newJson = newJson + "\"humidity\"" + ": " + humidity + ","
+                    newJson = newJson + "\"tempMin\"" + ": " + tempmin + ","
+                    newJson = newJson + "\"tempMax\"" + ": " + tempmax
+                    newJson = newJson + "},";
+                }
+
+                return "[" + newJson.slice(0, newJson.length - 1) + "]"
+            }
+        });
+    </script>
+</body>
+</html>
