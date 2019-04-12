@@ -32,7 +32,7 @@
                     success: function (result, status, xhr) {
                         res = CreateWeatherJson(result);
                         
-                        $("#newtable").append("<thead><tr><th>City Id</th><th>City Name</th><th>Temperature</th><th>Min Temp</th><th>Max Temp</th><th>Humidity</th><th>Pressure</th></thead></table>");
+                        $("#newtable").append("<thead><tr><th>City Id</th><th>City Name</th><th>Temperature</th><th>Min Temp</th><th>Max Temp</th></thead></table>");
                         $('#newtable').DataTable({
                             data: JSON.parse(res),
                             columns: [
@@ -40,9 +40,7 @@
                                 { data: 'cityName' },
                                 { data: 'temp' },
                                 { data: 'tempMin' },
-                                { data: 'tempMax' },
-                                { data: 'pressure' },
-                                { data: 'humidity' }
+                                { data: 'tempMax' }
                             ],
                             "pageLength": 3
                         });
@@ -64,8 +62,6 @@
                     cityId = json.list[i].id;
                     cityName = json.list[i].name;
                     temp = json.list[i].main.temp
-                    pressure = json.list[i].main.pressure
-                    humidity = json.list[i].main.humidity
                     tempmin = json.list[i].main.temp_min
                     tempmax = json.list[i].main.temp_max
 
@@ -73,8 +69,6 @@
                     newJson = newJson + "\"cityId\"" + ": " + cityId + ","
                     newJson = newJson + "\"cityName\"" + ": " + "\"" + cityName + "\"" + ","
                     newJson = newJson + "\"temp\"" + ": " + temp + ","
-                    newJson = newJson + "\"pressure\"" + ": " + pressure + ","
-                    newJson = newJson + "\"humidity\"" + ": " + humidity + ","
                     newJson = newJson + "\"tempMin\"" + ": " + tempmin + ","
                     newJson = newJson + "\"tempMax\"" + ": " + tempmax
                     newJson = newJson + "},";

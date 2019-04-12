@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>index</title>
+        <script type = "text/javascript">
+            function reqListener(city) {
+                var city = city;
+                var data;
+                var oReq = new XMLHttpRequest();
+                url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=b6d35ce7bdceb8bb6796301855459adc&units=metric";
+                oReq.open("GET", url,true);
+                oReq.onreadystatechange = function () {
+                    if(oReq.readyState === 4 && oReq.status === 200) {
+                        //console.log(oReq.responseText);
+                        data = JSON.parse(oReq.responseText);
+                        var newJson = JSON.stringify(data);
+                        //console.log(newJson);
+                        var pData = JSON.parse(newJson);
+                        //console.log(pData["weather"][0].description);
+                        var dData = "";
+                        dData += "<table border='1'>"
+                            dData += "<tr><td>City</td><td>Temperature</td><td>Weather</td></tr>";
+                            dData += "<tr><td>"+pData["name"]+"</td><td>"+pData["main"].temp+"&#176C" +"</td><td>"+pData["weather"][0].description+"</td></tr>";
+                        /*dData = dData + pData["name"] + " \n" ;
+                        dData = dData + pData["main"].temp+"&#176C ";
+                        dData = dData + pData["weather"][0].description;*/
+                        document.getElementById("demo").innerHTML = dData;
+                    }
+                };
+                oReq.send();                
+            }
+            
+        </script>
+        <style>
+                #demo {
+                  padding: 25px;
+                }
+        </style>
+    </head>
+    <body>
+        <h1>Openweathermap data</h1>
+        <h3>Select City to view Temperature</h3>    
+        <div id="container">
+                    <select name="citypick" id="citypick">
+                        <option value="none">Select City</option>
+                        <option value="London">London</option>
+                        <option value="Bristol">Bristol</option>
+                        <option value="Hamburg">Hamburg</option>
+                        <option value="Berlin">Berlin</option>
+                        <option value="Paris">Paris</option>
+                        <option value="Washington, D. C.">Washington, D. C.</option>
+                        <option value="New York">New York</option>
+                    </select>
+                    <input name="buttonExecute" onclick="reqListener(document.getElementById('citypick').value)" type="button" value="Execute" />
+            <div id="demo" pa>
+
+            </div>
+        </div>
+    </body>
+</html>
